@@ -14,7 +14,7 @@ from ...product.models import (
     Stock, StockLocation)
 from ...product.utils import get_availability
 from ...settings import DASHBOARD_PAGINATE_BY
-from ..views import staff_member_required, superuser_required
+from ..views import staff_member_required
 from . import forms
 
 
@@ -450,7 +450,8 @@ def variant_delete(request, product_pk, variant_pk):
         ctx)
 
 
-@superuser_required
+@staff_member_required
+@permission_required('product.view_attributes')
 def attribute_list(request):
     attributes = [
         (attribute.pk, attribute.name, attribute.values.all())
@@ -464,7 +465,8 @@ def attribute_list(request):
         ctx)
 
 
-@superuser_required
+@staff_member_required
+@permission_required('product.view_attributes')
 def attribute_detail(request, pk):
     attributes = ProductAttribute.objects.prefetch_related('values').all()
     attribute = get_object_or_404(attributes, pk=pk)
@@ -474,7 +476,8 @@ def attribute_detail(request, pk):
         {'attribute': attribute})
 
 
-@superuser_required
+@staff_member_required
+@permission_required('product.edit_attributes')
 def attribute_edit(request, pk=None):
     if pk:
         attribute = get_object_or_404(ProductAttribute, pk=pk)
@@ -498,7 +501,8 @@ def attribute_edit(request, pk=None):
         ctx)
 
 
-@superuser_required
+@staff_member_required
+@permission_required('product.edit_attributes')
 def attribute_delete(request, pk):
     attribute = get_object_or_404(ProductAttribute, pk=pk)
     if request.method == 'POST':
